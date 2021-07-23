@@ -1,9 +1,18 @@
 import { Flex, Text, Input, Icon, HStack, Box, Avatar } from "@chakra-ui/react";
 import { RiNotificationLine, RiSearchLine, RiUserAddLine } from 'react-icons/ri'
+import {motion} from 'framer-motion'
+const MotionFlex = motion(Flex);
 
 export function Header(){
   return (
-    <Flex
+    <MotionFlex
+    variants={{
+      delay: 1,
+      hidden: { opacity: 0, transform: "translateY(40px)" },
+      show: { opacity: 1,  transform: "translateY(0px)", transition: { duration: 0.2, delay: 1}, }
+    }}
+    initial="hidden"
+    animate="show"
       as='header'
       w='100%'
       maxWidth={1480}
@@ -52,7 +61,7 @@ export function Header(){
         </Flex>
       </Flex>
    
-    </Flex>
+    </MotionFlex>
 
   )
 }
