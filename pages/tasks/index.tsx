@@ -16,7 +16,6 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  HStack,
   Text,
   Stack,
   useDisclosure,
@@ -80,17 +79,6 @@ export default function Tasks(){
     onClose()
     }, []
  )
-
-  // // async function handleSubmit(data:TaskProps){
-  // //   try {
-  // //     await setTask([...task , 
-  // //       {id: Math.random() ,name:data.name , data: new Date(data.data) , status: 'pendente'}]) 
-  // //   } catch (e) {
-  // //     console.log(e)
-  // //   }
-   
-  //   onClose();  
-  // }
 
   function handleSetComplete(id){
     setTask(task.map(item => item.id === id ? { ...item, status:'concluida'} : item))
