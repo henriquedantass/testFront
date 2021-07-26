@@ -20,6 +20,7 @@ import {
   Text,
   Stack,
   useDisclosure,
+  Icon,
 } from '@chakra-ui/react'
 import {format} from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -27,14 +28,9 @@ import { useRef, useState } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import {InputField} from '../../src/components/Form/Input'
-const taskList = [
-  {id: 1, name: 'CodeReview' ,  data: new Date('02-25-2021 16:00:00'), status: 'pendente'},
-  {id: 2, name: 'DeployAPP' , data:  new Date('07-20-2023 12:30:00'), status: 'concluida'},
-  {id: 3, name: 'Criar componente',  data: new Date('05-19-2021 11:30:00'), status: 'pendente'},
-  {id: 4, name: 'Brainstorm' , data:  new Date('03-14-2021 09:30:00' ), status: 'cancelada'},
-  {id: 5, name: 'Reunião' , data:  new Date('05-14-2021 09:30:00' ), status: 'cancelada'},
-  {id: 6, name: 'Entrevista' , data:  new Date('09-14-2021 09:30:00' ), status: 'cancelada'}
-]
+import {BiCheck} from 'react-icons/bi'
+import {IoIosClose} from 'react-icons/io'
+
 interface TaskProps {
   id: number;
   name: string;
@@ -43,12 +39,11 @@ interface TaskProps {
 }
 
 export default function Tasks(){
-  const [ task, setTask] = useState<TaskProps []>(taskList)
+  const [ task, setTask] = useState<TaskProps []>([])
   const [filter, setFilter] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure();
   const formRef = useRef<FormHandles>(null);
 
-  console.log(task)
   const statusFormat = {
     pendente: {
       color: 'orange.500',
@@ -70,6 +65,15 @@ export default function Tasks(){
     }
    
     onClose();  
+  }
+
+  function handleSetComplete(id){
+    setTask(task.map(item => item.id === id ? { ...item, status:'concluida'} : item))
+  }
+
+  function handleSetCanceled(id) {
+    setTask(task.map(item => item.id === id ? { ...item, status:'cancelada'} : item))
+
   }
 
 
@@ -106,7 +110,8 @@ export default function Tasks(){
               <Tbody key={task.id}>
                   <Tr>
                   <Td>{task.name}</Td>
-                  <Td>{format(new Date(task.data), "dd/MM/yyyy 'ás' HH:mm " , {locale:ptBR})}</Td>
+                  <Td>{format(new Date(task.data), 
+                  "dd/MM/yyyy 'ás' HH:mm " , {locale:ptBR})}</Td>
                   <Td color= {statusFormat[task.status].color}>{task.status}</Td>
                   </Tr>
               </Tbody>
@@ -114,12 +119,31 @@ export default function Tasks(){
             </>
           ) : (
             <>
-            {task.sort((a, b) => new Date(a.data).valueOf() - new Date(b.data).valueOf()).map(task => (
-              <Tbody key={task.id}>
+            {task.sort((a, b) => 
+            new Date(a.data).valueOf() - 
+            new Date(b.data).valueOf()).map(item => (
+              <Tbody key={item.id}>
                   <Tr>
-                  <Td>{task.name}</Td>
-                  <Td>{format(new Date(task.data), "dd/MM/yyyy 'ás' HH:mm " , {locale:ptBR})}</Td>
-                  <Td color= {statusFormat[task.status].color}>{task.status}</Td>
+                  <Td>{item.name}</Td>
+                  <Td>{format(new Date(item.data), 
+                  "dd/MM/yyyy 'ás' HH:mm " , {locale:ptBR})}</Td>
+                  <Td color= {statusFormat[item.status].color}>{item.status}
+                  </Td>
+                  {item.status !== 'cancelada' && (
+                       <Icon 
+                       onClick={() => {handleSetCanceled(item.id)}}
+                       as={IoIosClose} 
+                       color="red.500" 
+                       fontSize="25px"/>
+                  )}
+                  {item.status !== 'concluida' && (
+                    <Icon 
+                    onClick={() => {handleSetComplete(item.id)}}
+                    as={BiCheck} 
+                    color='green.500' 
+                    fontSize="25px"/>
+                  )}
+                  <Td></Td>
                   </Tr>
               </Tbody>
                 ))}
@@ -157,7 +181,6 @@ export default function Tasks(){
                 <InputField name='name' placeholder='Título'/>
                 <InputField name='data' type ='date' />
               </Stack>
-
             </ModalBody>
             <ModalFooter>
               <Button
