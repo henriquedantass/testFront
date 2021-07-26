@@ -12,14 +12,14 @@ import { useField } from '@unform/core'
 import { useState } from 'react'
 import { useEffect, useRef } from 'react'
 import {BiErrorCircle} from 'react-icons/bi'
-interface PotatosInputProps extends InputProps  {
+interface InputPropsTask extends InputProps  {
   name: string;
   mask?: string;
   maskChar?: string;
   placeholder?: string;
 }
 
-export const InputField: React.FC<PotatosInputProps> = ({
+export const InputField: React.FC<InputPropsTask> = ({
   name,
   placeholder,
   ...rest
