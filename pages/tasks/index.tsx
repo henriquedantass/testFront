@@ -62,8 +62,13 @@ export default function Tasks(){
   }
 
   async function handleSubmit(data:TaskProps){
-    await setTask([...task , 
-      {id: Math.random() ,name:data.name , data: new Date(data.data) , status: 'pendente'}]) 
+    try {
+      await setTask([...task , 
+        {id: Math.random() ,name:data.name , data: new Date(data.data) , status: 'pendente'}]) 
+    } catch (e) {
+      console.log(e)
+    }
+   
     onClose();  
   }
 
@@ -150,7 +155,7 @@ export default function Tasks(){
             <ModalBody>
               <Stack>
                 <InputField name='name' placeholder='Título'/>
-                <InputField name='data' placeholder='Data dia/mes/ano'/>
+                <InputField name='data' type ='date' />
               </Stack>
 
             </ModalBody>
