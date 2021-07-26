@@ -20,6 +20,15 @@ import {
   Stack,
   useDisclosure,
   Icon,
+  Tooltip,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
 } from '@chakra-ui/react'
 import {format} from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -29,6 +38,7 @@ import { FormHandles } from '@unform/core';
 import {InputField} from '../../src/components/Form/Input'
 import {BiCheck} from 'react-icons/bi'
 import {IoIosClose} from 'react-icons/io'
+import {MdDescription} from 'react-icons/md'
 import {BsTrash} from 'react-icons/bs'
 import * as Yup from 'yup';
 import getValidationErrors from '../../util/getValidationErros';
@@ -37,6 +47,7 @@ interface TaskProps {
   name: string;
   data: Date;
   status: string;
+  description: string;
 }
 
 export default function Tasks(){
@@ -64,12 +75,18 @@ export default function Tasks(){
        const schema = Yup.object().shape({
           name: Yup.string().required('não foi encontrado'),
           data: Yup.date().required('não foi encontrado'),
+          description: Yup.string().required('não foi encontrado'),
+
        })
        await schema.validate(data, {
           abortEarly: false,
        })
        setTask([...task , 
-             {id: Math.random() ,name:data.name , data: new Date(data.data) , status: 'pendente'}]) 
+             {id: Math.random() ,name:data.name , 
+              data: new Date(data.data) , 
+              status: 'pendente', 
+              description:data.description
+            }]) 
 
     } catch (err) {
        const errors = getValidationErrors(err)
@@ -113,6 +130,7 @@ export default function Tasks(){
           <Thead>
             <Tr>
               <Th >Atividade</Th>
+              <Th>Descrição</Th>
               <Th maxWidth='100px'> <Text isTruncated >Data de criação</Text></Th>
               <Th>Status</Th>
             </Tr>
@@ -140,6 +158,18 @@ export default function Tasks(){
               <Tbody key={item.id}>
                   <Tr>
                   <Td>{item.name}</Td>
+                  <Td cursor='pointer'_hover={{opacity: 0.5}}> 
+                  <Popover>
+                    <PopoverTrigger>
+                      <Text isTruncated maxWidth='50px'>{item.description}</Text>
+                    </PopoverTrigger>
+                    <PopoverContent  bg='gray.800'>
+                      <PopoverCloseButton />
+                      <PopoverHeader>Descrição</PopoverHeader>
+                      <PopoverBody>{item.description}</PopoverBody>
+                    </PopoverContent>
+                  </Popover>
+                  </Td>
                   <Td>{format(new Date(item.data), 
                   "dd/MM/yyyy 'ás' HH:mm " , {locale:ptBR})}</Td>
                   <Td color= {statusFormat[item.status].color}>{item.status}
@@ -182,6 +212,7 @@ export default function Tasks(){
         >
           Nova Atividade
         </Button>
+        {/* Modal para criação de nova atividade*/}
         <Modal isOpen={isOpen} onClose={onClose} size='5x1'>
           <ModalOverlay />
           <ModalContent
@@ -202,6 +233,7 @@ export default function Tasks(){
               <Stack>
                 <InputField name='name' placeholder='Título'/>
                 <InputField name='data' type ='date' />
+                <InputField name='description' placeholder='Descrição'/>
               </Stack>
             </ModalBody>
             <ModalFooter>
@@ -224,6 +256,8 @@ export default function Tasks(){
             </Form>
           </ModalContent>
       </Modal>
+                    
+                    
       </Flex>
     </Dashboard>
   )
