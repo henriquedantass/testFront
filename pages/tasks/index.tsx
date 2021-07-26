@@ -8,25 +8,48 @@ import {
   Th,
   Td,
   Select,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  HStack,
   Text,
-  Box,
+  Stack,
+  useDisclosure,
 } from '@chakra-ui/react'
 import {format} from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useState } from 'react';
-
+import { useRef, useState } from 'react';
+import { Form } from '@unform/web';
+import { FormHandles } from '@unform/core';
+import {InputField} from '../../src/components/Form/Input'
+import {SelectField} from '../../src/components/Form/Select'
 const taskList = [
   {id: 1, name: 'CodeReview' ,  data: new Date('02-25-2021 16:00:00'), status: 'pendente'},
   {id: 2, name: 'DeployAPP' , data:  new Date('07-20-2023 12:30:00'), status: 'concluida'},
   {id: 3, name: 'Criar componente',  data: new Date('05-19-2021 11:30:00'), status: 'pendente'},
-  {id: 4, name: 'Brainstorm' , data:  new Date('03-14-2021 09:30:00' ), status: 'cancelada'}
+  {id: 4, name: 'Brainstorm' , data:  new Date('03-14-2021 09:30:00' ), status: 'cancelada'},
+  {id: 5, name: 'Reunião' , data:  new Date('05-14-2021 09:30:00' ), status: 'cancelada'},
+  {id: 6, name: 'Entrevista' , data:  new Date('09-14-2021 09:30:00' ), status: 'cancelada'}
 ]
-
+interface TaskProps {
+  id: number;
+  name: string;
+  data: Date;
+  status: string;
+}
 
 export default function Tasks(){
+  const [ task, setTask] = useState<TaskProps []>(taskList)
   const [filter, setFilter] = useState('')
-  console.log(filter)
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const formRef = useRef<FormHandles>(null);
 
+  console.log(task)
   const statusFormat = {
     pendente: {
       color: 'orange.500',
@@ -38,6 +61,15 @@ export default function Tasks(){
       color: 'green.500',
     }
   }
+
+  async function handleSubmit(data:TaskProps){
+    await setTask([...task , 
+      {id: Math.random() ,name:data.name , data: new Date(data.data) , status: 'pendente'}]) 
+    onClose();  
+  }
+
+
+
   return (
     <Dashboard>
       <Flex w='100%' bg='gray.800' p='1rem' borderRadius='10px' flexDir='column' mt='20px'>
@@ -64,7 +96,7 @@ export default function Tasks(){
           </Thead>
           {filter.length > 0 ? (
             <>
-            {taskList.filter(task => {
+            {task.filter(task => {
               return task.status.includes(filter);
             }).map(task => (
               <Tbody key={task.id}>
@@ -78,7 +110,7 @@ export default function Tasks(){
             </>
           ) : (
             <>
-            {taskList.sort((a, b) => new Date(a.data).valueOf() - new Date(b.data).valueOf()).map(task => (
+            {task.sort((a, b) => new Date(a.data).valueOf() - new Date(b.data).valueOf()).map(task => (
               <Tbody key={task.id}>
                   <Tr>
                   <Td>{task.name}</Td>
@@ -90,6 +122,59 @@ export default function Tasks(){
             </>
           )}
         </Table>
+        <Button 
+        onClick={onOpen}
+        maxWidth='300px' 
+        bg='green.500' 
+        _hover={{bg:'transparent', color:'green.500'}} 
+        alignSelf='flex-end' 
+        mt='20px'
+        >
+          Nova Atividade
+        </Button>
+        <Modal isOpen={isOpen} onClose={onClose} size='5x1'>
+          <ModalOverlay />
+          <ModalContent
+            h="fit-content"
+            maxW="750px"
+            bg='gray.800'
+            padding='0.5rem'
+            borderRadius="15px"
+            boxShadow="md"
+            className="backdropBlur"
+            border="1px solid rgba(0, 187, 255, 0.3)"
+            textColor="white"
+          >
+            <Form ref={formRef} onSubmit={handleSubmit}>
+            <ModalHeader>Nova atividade</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Stack>
+                <InputField name='name' placeholder='Título'/>
+                <InputField name='data' placeholder='Data dia/mes/ano'/>
+              </Stack>
+
+            </ModalBody>
+            <ModalFooter>
+              <Button
+              onClick={onClose}   
+              bg='red.500' 
+              mr={3}
+              _hover={{bg:'transparent', color:'red.500'}} 
+              >
+                Cancelar
+              </Button>
+              <Button  
+              type='submit' 
+              bg='green.500' 
+               _hover={{bg:'transparent', color:'green.500'}} 
+               >
+                 Enviar
+              </Button>
+            </ModalFooter>
+            </Form>
+          </ModalContent>
+      </Modal>
       </Flex>
     </Dashboard>
   )

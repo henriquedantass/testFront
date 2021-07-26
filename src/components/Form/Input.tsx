@@ -1,0 +1,71 @@
+import { 
+  Input, 
+  InputProps,
+  InputGroup, 
+  Box, 
+  Flex
+} from '@chakra-ui/react'
+import { useField } from '@unform/core'
+import { useState } from 'react'
+import { useEffect, useRef } from 'react'
+interface InputPropsForm extends InputProps  {
+  name: string;
+  mask?: string;
+  maskChar?: string;
+  placeholder?: string;
+}
+
+export const InputField: React.FC<InputPropsForm> = ({
+  name,
+  placeholder,
+  ...rest
+  }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  const { fieldName, defaultValue,  registerField } = useField(name)
+  const [isFocused, setIsFocused] = useState(false)
+  const [inputValue, setInputValue] = useState("")
+
+  const changeColor = inputValue?.length > 0 ? "rgba(0, 187, 255, 0.427)" : "transparent"
+  useEffect(() => {
+  registerField({
+    name: fieldName,
+    ref: inputRef.current,
+    path: 'value',
+  });
+}, [fieldName, registerField]);
+
+  return (
+      <Flex flexDir='column' position="relative">
+          <Box
+            opacity={isFocused ? 1 : 0.5 }
+            position="absolute"
+            transition="0.2s all"
+            color={isFocused ? "blue.500" : "white" }
+            zIndex={isFocused ? "3" : "initial" }
+            fontSize={isFocused || inputValue.length > 0 ? 11 : 14 }
+            ml="15px"
+            mt={isFocused || inputValue.length > 0 ? "5px" : "14px" }
+          >
+              {placeholder}
+          </Box>
+          <InputGroup>
+              <Input 
+                  size="lg"
+                  ref={inputRef}
+                  name={name}
+                  onFocus={() => {setIsFocused(true)}}
+                  onBlur={() => {setIsFocused(false)}}
+                  onChangeCapture={(e) => {setInputValue(e.currentTarget.value)}}
+                  fontSize={14}
+                  paddingTop="15px"                    
+                  _focus={{bgColor: "blackAlpha.600", border: "1px solid rgba(0, 187, 255, 1) !important"}} 
+                  defaultValue={defaultValue}
+                  colorScheme="blackAlpha" 
+                  bg='blackAlpha.500'
+                  {...rest}
+              />
+          </InputGroup>
+      </Flex>
+  )
+}
