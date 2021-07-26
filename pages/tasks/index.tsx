@@ -24,14 +24,15 @@ import {
 } from '@chakra-ui/react'
 import {format} from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { useRef, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import {InputField} from '../../src/components/Form/Input'
 import {BiCheck} from 'react-icons/bi'
 import {IoIosClose} from 'react-icons/io'
 import {BsTrash} from 'react-icons/bs'
-
+import * as Yup from 'yup';
+import getValidationErrors from '../../util/getValidationErros';
 interface TaskProps {
   id: number;
   name: string;
@@ -57,16 +58,39 @@ export default function Tasks(){
     }
   }
 
-  async function handleSubmit(data:TaskProps){
-    try {
-      await setTask([...task , 
-        {id: Math.random() ,name:data.name , data: new Date(data.data) , status: 'pendente'}]) 
-    } catch (e) {
-      console.log(e)
+  const handleSubmit = useCallback(
+    async (data: TaskProps) => {
+
+       try {
+       const schema = Yup.object().shape({
+          name: Yup.string().required('não foi encontrado'),
+          data: Yup.date().required('não foi encontrado'),
+       })
+       await schema.validate(data, {
+          abortEarly: false,
+       })
+       setTask([...task , 
+             {id: Math.random() ,name:data.name , data: new Date(data.data) , status: 'pendente'}]) 
+
+    } catch (err) {
+       const errors = getValidationErrors(err)
+       formRef.current?.setErrors(errors)
     }
+
+    onClose()
+    }, []
+ )
+
+  // // async function handleSubmit(data:TaskProps){
+  // //   try {
+  // //     await setTask([...task , 
+  // //       {id: Math.random() ,name:data.name , data: new Date(data.data) , status: 'pendente'}]) 
+  // //   } catch (e) {
+  // //     console.log(e)
+  // //   }
    
-    onClose();  
-  }
+  //   onClose();  
+  // }
 
   function handleSetComplete(id){
     setTask(task.map(item => item.id === id ? { ...item, status:'concluida'} : item))

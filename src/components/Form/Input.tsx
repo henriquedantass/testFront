@@ -2,27 +2,31 @@ import {
   Input, 
   InputProps,
   InputGroup, 
+  InputRightElement, 
+  Icon, 
+  Tooltip,
   Box, 
   Flex
 } from '@chakra-ui/react'
 import { useField } from '@unform/core'
 import { useState } from 'react'
 import { useEffect, useRef } from 'react'
-interface InputPropsForm extends InputProps  {
+import {BiErrorCircle} from 'react-icons/bi'
+interface PotatosInputProps extends InputProps  {
   name: string;
   mask?: string;
   maskChar?: string;
   placeholder?: string;
 }
 
-export const InputField: React.FC<InputPropsForm> = ({
+export const InputField: React.FC<PotatosInputProps> = ({
   name,
   placeholder,
   ...rest
   }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   
-  const { fieldName, defaultValue,  registerField } = useField(name)
+  const { fieldName, defaultValue, error, registerField } = useField(name)
   const [isFocused, setIsFocused] = useState(false)
   const [inputValue, setInputValue] = useState("")
 
@@ -59,12 +63,22 @@ export const InputField: React.FC<InputPropsForm> = ({
                   onChangeCapture={(e) => {setInputValue(e.currentTarget.value)}}
                   fontSize={14}
                   paddingTop="15px"                    
+                  // placeholder={placeholder}
                   _focus={{bgColor: "blackAlpha.600", border: "1px solid rgba(0, 187, 255, 1) !important"}} 
+                  border={`1px solid ${error ? "#f00" : changeColor} !important`}
                   defaultValue={defaultValue}
                   colorScheme="blackAlpha" 
                   bg='blackAlpha.500'
                   {...rest}
               />
+              {error &&
+                  <Tooltip placement="top" bgColor="#000" color="white" label={error} aria-label="A tooltip">
+                      <InputRightElement h="100%" children={
+                          <Icon color="#f00" size={10}  as={BiErrorCircle} />
+                      } />    
+                  </Tooltip>
+                  } 
+              
           </InputGroup>
       </Flex>
   )
