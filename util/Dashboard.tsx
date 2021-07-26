@@ -22,7 +22,7 @@ export default function Dashboard({children}:DashboardProps) {
         show: { opacity: 1,  transform: "translateY(0px)", transition: { duration: 0.8, delay: 1}, }
       }}
       initial="hidden"
-      animate="show" w='100%' maxWidth={1480} mx='auto' px='6' flexDir={['column', 'row']}>
+      animate="show" w='100%' maxWidth={1480} mx='auto' px={['3','6']} flexDir={['column', 'row']}>
         <Sidebar/>
         <Flex  flex='1'  align='flex-start'>
           {children}
