@@ -30,6 +30,7 @@ import { FormHandles } from '@unform/core';
 import {InputField} from '../../src/components/Form/Input'
 import {BiCheck} from 'react-icons/bi'
 import {IoIosClose} from 'react-icons/io'
+import {BsTrash} from 'react-icons/bs'
 
 interface TaskProps {
   id: number;
@@ -73,9 +74,11 @@ export default function Tasks(){
 
   function handleSetCanceled(id) {
     setTask(task.map(item => item.id === id ? { ...item, status:'cancelada'} : item))
-
   }
 
+  function handleRemoveTask(id) {
+    setTask(task.filter(item => item.id !== id))
+  }
 
 
   return (
@@ -143,6 +146,13 @@ export default function Tasks(){
                     color='green.500' 
                     fontSize="25px"/>
                   )}
+                  <Icon 
+                  onClick={() => {handleRemoveTask(item.id)}}
+                  as={BsTrash} 
+                  color='gray.500' 
+                  fontSize='15px' ml='5px'>
+
+                  </Icon>
                   <Td></Td>
                   </Tr>
               </Tbody>
