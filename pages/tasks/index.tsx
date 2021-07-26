@@ -27,7 +27,6 @@ import { useRef, useState } from 'react';
 import { Form } from '@unform/web';
 import { FormHandles } from '@unform/core';
 import {InputField} from '../../src/components/Form/Input'
-import {SelectField} from '../../src/components/Form/Select'
 const taskList = [
   {id: 1, name: 'CodeReview' ,  data: new Date('02-25-2021 16:00:00'), status: 'pendente'},
   {id: 2, name: 'DeployAPP' , data:  new Date('07-20-2023 12:30:00'), status: 'concluida'},
