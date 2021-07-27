@@ -64,33 +64,33 @@ export default function Tasks(){
     }
   }
 
-  const handleSubmit = useCallback(
-    async (data: TaskProps) => {
-       try {
-       const schema = Yup.object().shape({
-          name: Yup.string().required('não foi encontrado'),
-          data: Yup.date().required('não foi encontrado'),
-          description: Yup.string().required('não foi encontrado'),
+  async function handleSubmit(data:TaskProps) {
+    try {
+      const schema = Yup.object().shape({
+         name: Yup.string().required('não foi encontrado'),
+         data: Yup.date().required('não foi encontrado'),
+         description: Yup.string().required('não foi encontrado'),
 
-       })
-       await schema.validate(data, {
-          abortEarly: false,
-       })
-       setTask([...task , 
-             {id: Math.random() ,name:data.name , 
-              data: new Date(data.data) , 
-              status: 'pendente', 
-              description:data.description
-            }]) 
-
-    } catch (err) {
-       const errors = getValidationErrors(err)
-       formRef.current?.setErrors(errors)
-    }
-
+      })
+      await schema.validate(data, {
+         abortEarly: false,
+      })
+      setTask([...task , 
+            {id: Math.random() ,name:data.name , 
+             data: new Date(data.data) , 
+             status: 'pendente', 
+             description:data.description
+       }]) 
+       
     onClose()
-    }, []
- )
+
+
+   } catch (err) {
+      const errors = getValidationErrors(err)
+      formRef.current?.setErrors(errors)
+   }
+  }
+
 
   function handleSetComplete(id){
     setTask(task.map(item => item.id === id ? { ...item, status:'concluida'} : item))
