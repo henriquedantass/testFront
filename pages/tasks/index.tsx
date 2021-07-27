@@ -66,7 +66,6 @@ export default function Tasks(){
 
   const handleSubmit = useCallback(
     async (data: TaskProps) => {
-
        try {
        const schema = Yup.object().shape({
           name: Yup.string().required('não foi encontrado'),

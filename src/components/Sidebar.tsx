@@ -1,5 +1,4 @@
 import { Text, Box, Stack, Icon, Flex  } from "@chakra-ui/react";
-import { RiContactsLine, RiDashboardLine, RiGitMergeLine, RiInputMethodLine } from "react-icons/ri";
 import {FaTasks, FaHome} from 'react-icons/fa' 
 import Link from 'next/link';
 
