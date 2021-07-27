@@ -20,14 +20,11 @@ import {
   Stack,
   useDisclosure,
   Icon,
-  Tooltip,
   Popover,
   PopoverTrigger,
   PopoverContent,
   PopoverHeader,
   PopoverBody,
-  PopoverFooter,
-  PopoverArrow,
   PopoverCloseButton,
 } from '@chakra-ui/react'
 import {format} from 'date-fns';
@@ -38,7 +35,6 @@ import { FormHandles } from '@unform/core';
 import {InputField} from '../../src/components/Form/Input'
 import {BiCheck} from 'react-icons/bi'
 import {IoIosClose} from 'react-icons/io'
-import {MdDescription} from 'react-icons/md'
 import {BsTrash} from 'react-icons/bs'
 import * as Yup from 'yup';
 import getValidationErrors from '../../util/getValidationErros';
