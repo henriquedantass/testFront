@@ -73,9 +73,9 @@ export const InputField: React.FC<InputPropsTask> = ({
               />
               {error &&
                   <Tooltip placement="top" bgColor="#000" color="white" label={error} aria-label="A tooltip">
-                      <InputRightElement h="100%" children={
+                      <InputRightElement h="100%">
                           <Icon color="#f00" size={10}  as={BiErrorCircle} />
-                      } />    
+                      </InputRightElement> 
                   </Tooltip>
                   } 
               

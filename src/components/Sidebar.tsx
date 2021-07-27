@@ -10,6 +10,7 @@ export function Sidebar(){
     }>
         <Box mt='5'>
                 <Stack  spacing={5} > 
+                {/* eslint-disable-next-line no-use-before-define */}
                 <Link  href='/' >
                   <Flex cursor='pointer' _hover={{opacity: 0.5}}>
                     <Icon as={FaHome} color='white' fontSize='20'/>
